@@ -1,0 +1,50 @@
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+    working_dir: /app
+    environment:
+      - NODE_ENV=development
+      - TZ=Asia/Tokyo
+      - WATCHPACK_POLLING=true
+    command: yarn run dev
+    networks:
+      - app-network
+
+  backend:
+    build: ./backend
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./backend:/app
+    working_dir: /app
+    environment:
+      - NODE_ENV=development
+      - TZ=Asia/Tokyo
+    tty: true
+    command: yarn run start:dev
+    networks:
+      - app-network
+
+  firebase:
+    build: ./firebase
+    working_dir: /opt/firebase
+    volumes:
+      - ./firebase/firebase.json:/opt/firebase/firebase.json
+      - ./firebase/.firebaserc:/opt/firebase/.firebaserc
+      - ./firebase/config:/root/.config:cached
+      - ./firebase/cache:/root/.cache:cached
+    ports:
+      - "${FIREBASE_LOGIN_PORT}:${FIREBASE_LOGIN_PORT}"
+      - "${FIREBASE_AUTHENTICATION_PORT}:${FIREBASE_AUTHENTICATION_PORT}"
+      - "${FIREBASE_UI_PORT}:${FIREBASE_UI_PORT}"
+    networks:
+      - app-network
+    command: firebase emulators:start
+
+networks:
+  app-network:
+    driver: bridge
