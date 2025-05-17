@@ -1,12 +1,12 @@
 {
   "emulators": {
     "auth": {
-      "port": "${FIREBASE_AUTHENTICATION_PORT}",
+      "port": 9099,
       "host": "0.0.0.0"
     },
     "ui": {
       "enabled": true,
-      "port": "${FIREBASE_UI_PORT}",
+      "port": 4000,
       "host": "0.0.0.0"
     },
     "singleProjectMode": true
